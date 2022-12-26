@@ -1,0 +1,7 @@
+curl --location --request POST 'http://keycloak-authorization-server:9091/auth/realms/microservices-realm/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'username=app_super_user' \
+--data-urlencode 'password=app_super_user!' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'client_id=elastic-query-web-client' \
+--data-urlencode 'client_secret=851a125f-7914-47da-bbeb-ec528c1755a6'

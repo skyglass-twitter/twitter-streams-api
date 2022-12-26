@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  twitter-to-kafka-service:
+    image: ${GROUP_ID}/twitter.to.kafka.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5005:5005"
+      - "9010:9010"
+    volumes:
+      - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
+      - "./check-config-server-started_twitter_to_kafka.sh:/usr/local/bin/check-config-server-started_twitter_to_kafka.sh"
+    user: root
+    entrypoint: ["check-config-server-started_twitter_to_kafka.sh"]
+    depends_on:
+      - config-server
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010"
+      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
+      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_0=twitter-topic"
+      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_1=twitter-analytics-topic"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "TWITTER-TO-KAFKA-SERVICE_ENABLE-MOCK-TWEETS=false"
+      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8888,http://config-server-ha:8889"
+      - "LOG_APP-NAME=twitter-to-kafka-service"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_ZIPKIN_BASE-URL=http://zipkin:9411"
+      - "SPRING_ZIPKIN_SENDER_TYPE=web"
+      - "SPRING_SLEUTH_SAMPLER_PROBABILITY=1.0"
+      - "TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+  config-server:
+    image: ${GROUP_ID}/config.server:${SERVICE_VERSION:-latest}
+    ports:
+      - "5007:5007"
+      - "8888:8888"
+    volumes:
+      - "./docker-logs:/workspace/config-server/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007 -Xms128m -Xmx256m"
+      - "LOG_APP-NAME=config-server"
+      - "SERVER_PORT=8888"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}

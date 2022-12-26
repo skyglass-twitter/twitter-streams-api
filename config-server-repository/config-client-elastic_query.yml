@@ -1,0 +1,96 @@
+elastic-query-service:
+  version: v1
+  custom-audience: elastic-query-service
+  webclient:
+    connect-timeout-ms: 10000
+    read-timeout-ms: 10000
+    write-timeout-ms: 10000
+    max-in-memory-size: 10485760 # 10MB
+    content-type: 'application/vnd.api.v1+json'
+    accept-type: 'application/vnd.api.v1+json'
+    query-type: 'ANALYTICS_DATABASE'
+  query-from-kafka-state-store:
+    method: GET
+    uri: "http://gateway-service/kafka-streams-service/get-word-count-by-word/{word}"
+    accept: ${elastic-query-service.webclient.accept-type}
+  query-from-analytics-database:
+    method: GET
+    uri: "http://gateway-service/analytics-service/get-word-count-by-word/{word}"
+    accept: ${elastic-query-service.webclient.accept-type}
+
+server:
+  port: 8183
+  servlet:
+    context-path: /
+
+spring:
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9091/auth/realms/microservices-realm
+          jwk-set-uri: http://localhost:9091/auth/realms/microservices-realm/protocol/openid-connect/certs
+      client:
+        registration:
+          keycloak:
+            client-id: 'elastic-query-service'
+            client-secret: '{cipher}87191dde8d9944c470ffe0f00f17134d40f659756915af9c8a9bc5dab0b80f8a71acf1d94642151714b37017648883a6a7ca4a995db650bb734b7a60c19ed110'
+            authorizationGrantType: client_credentials
+        provider:
+          keycloak:
+            tokenUri: http://localhost:9091/auth/realms/microservices-realm/protocol/openid-connect/token
+  jpa:
+    open-in-view: false
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true
+    username: postgres
+    password: '{cipher}d4af18fcab2f5ece79a7b41f36066be102deb3cae3394854edfdf490b2e42d12'
+    driver-class-name: org.postgresql.Driver
+    platform: postgres
+    schema: classpath:init-schema.sql
+    data: classpath:init-data.sql
+    initialization-mode: always
+
+elastic-query-config:
+  text-field: text
+
+elastic-config:
+  index-name: twitter-index
+  connection-url: http://localhost:9200
+  connect-timeout-ms: 5000
+  socket-timeout-ms: 30000
+
+user-config:
+  username: test
+  password: '{cipher}baeb90d57edb9a050b97b98a7d8cabe80ee884e6fff16c22956172459a43e54d'
+  roles: USER
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+security:
+  paths-to-ignore: /api-docs, /actuator/**
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure.include: health, prometheus
+      path-mapping.prometheus: metrics
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      cache.time-to-live: 1ms
