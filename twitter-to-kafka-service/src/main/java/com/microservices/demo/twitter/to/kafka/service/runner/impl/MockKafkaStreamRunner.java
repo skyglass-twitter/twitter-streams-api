@@ -1,6 +1,6 @@
 package com.microservices.demo.twitter.to.kafka.service.runner.impl;
 
-import com.microservices.demo.config.TwitterToKafkaServiceConfigData;
+import com.microservices.demo.twitter.to.kafka.service.config.TwitterToKafkaServiceConfigData;
 import com.microservices.demo.twitter.to.kafka.service.exception.TwitterToKafkaServiceException;
 import com.microservices.demo.twitter.to.kafka.service.listener.TwitterKafkaStatusListener;
 import com.microservices.demo.twitter.to.kafka.service.runner.StreamRunner;
@@ -15,7 +15,6 @@ import twitter4j.TwitterObjectFactory;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
@@ -82,7 +81,6 @@ public class MockKafkaStreamRunner implements StreamRunner {
         simulateTwitterStream(keywords, minTweetLength, maxTweetLength, sleepTimeMs);
     }
 
-
     private void simulateTwitterStream(String[] keywords, int minTweetLength, int maxTweetLength, long sleepTimeMs) {
         Executors.newSingleThreadExecutor().submit(() -> {
             try {
@@ -108,7 +106,7 @@ public class MockKafkaStreamRunner implements StreamRunner {
 
     private String getFormattedTweet(String[] keywords, int minTweetLength, int maxTweetLength) {
         String[] params = new String[]{
-                ZonedDateTime.now().format(DateTimeFormatter.ofPattern(TWITTER_STATUS_DATE_FORMAT, Locale.ENGLISH)),
+                ZonedDateTime.now().format(DateTimeFormatter.ofPattern(TWITTER_STATUS_DATE_FORMAT)),
                 String.valueOf(ThreadLocalRandom.current().nextLong(Long.MAX_VALUE)),
                 getRandomTweetContent(keywords, minTweetLength, maxTweetLength),
                 String.valueOf(ThreadLocalRandom.current().nextLong(Long.MAX_VALUE))

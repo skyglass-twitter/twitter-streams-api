@@ -1,18 +1,13 @@
-spring:
-  application:
-    name: twitter-to-kafka-service
-  profiles:
-    active: twitter_to_kafka
-  config:
-    import: 'configserver:'
-  cloud:
-    config:
-      name: twitter-to-kafka-service,config-client
-      username: spring_cloud_user
-      password: '1234'
-
-log:
-  app-name: twitter-to-kafka-service
+spring.profiles.include: 'common'
 
 twitter-to-kafka-service:
-  enable-mock-tweets: false
+  twitter-keywords:
+    - Java
+    - Microservices
+    - Kafka
+    - Elasticsearch
+  welcome-message: Hello microservices!
+  enable-mock-tweets: true
+  mock-min-tweet-length: 5
+  mock-max-tweet-length: 15
+  mock-sleep-ms: 10000
