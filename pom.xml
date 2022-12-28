@@ -9,6 +9,16 @@
 		<module>kafka/kafka-model</module>
 		<module>kafka/kafka-admin</module>
 		<module>kafka/kafka-producer</module>
+		<module>kafka/kafka-consumer</module>
+		<module>kafka-to-elastic-service</module>
+		<module>elastic</module>
+		<module>common-util</module>
+		<module>elastic-query-service</module>
+		<module>elastic-query-web-client</module>
+		<module>elastic-query-service-common</module>
+		<module>elastic-query-web-client-common</module>
+		<module>reactive-elastic-query-service</module>
+		<module>reactive-elastic-query-web-client</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -32,6 +42,8 @@
 		<spring-kafka.version>2.9.2</spring-kafka.version>
 		<spring-retry.version>1.3.0</spring-retry.version>
 		<kafka-avro-serializer.version>7.2.1</kafka-avro-serializer.version>
+		<elastic.version>7.17.4</elastic.version>
+		<springdoc-openapi-ui.version>1.6.12</springdoc-openapi-ui.version>
 	</properties>
 
 	<repositories>
@@ -46,12 +58,47 @@
 			<!-- LOCAL -->
 			<dependency>
 				<groupId>com.microservices.demo</groupId>
-				<artifactId>app-config-data</artifactId>
+				<artifactId>elastic-query-web-client-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.microservices.demo</groupId>
-				<artifactId>common-config</artifactId>
+				<artifactId>elastic-query-service-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>common-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>elastic-model</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>elastic-config</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>elastic-index-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>elastic-query-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>kafka-consumer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>app-config-data</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -101,14 +148,14 @@
 			</dependency>
 
 			<dependency>
-				<groupId>org.springframework.retry</groupId>
-				<artifactId>spring-retry</artifactId>
-				<version>${spring-retry.version}</version>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-webflux</artifactId>
+				<version>${spring-boot.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-webflux</artifactId>
+				<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 				<version>${spring-boot.version}</version>
 			</dependency>
 
@@ -124,6 +171,23 @@
 				<version>${avro.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.elasticsearch</groupId>
+				<artifactId>elasticsearch</artifactId>
+				<version>${elastic.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.elasticsearch.client</groupId>
+				<artifactId>elasticsearch-rest-high-level-client</artifactId>
+				<version>${elastic.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-ui</artifactId>
+				<version>${springdoc-openapi-ui.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>io.confluent</groupId>

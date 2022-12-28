@@ -1,5 +1,0 @@
-spring:
-  application:
-    name: twitter-to-kafka-service
-  profiles:
-    active: twitter_to_kafka

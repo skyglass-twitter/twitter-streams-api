@@ -6,13 +6,109 @@ services:
       - "5005:5005"
     volumes:
       - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
+    depends_on:
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
-      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
-      - "LOGGING_LEVEL_ROOT=info"
+      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=error"
+      - "LOGGING_LEVEL_ROOT=error"
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "TWITTER-TO-KAFKA-SERVICE_ENABLE-MOCK-TWEETS=false"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+  kafka-to-elastic-service:
+    image: ${GROUP_ID}/kafka.to.elastic.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5006:5006"
+    volumes:
+      - "./docker-logs:/workspace/kafka-to-elastic-service/logs"
+      - "./check-kafka-topics-created.sh:/usr/local/bin/check-kafka-topics-created.sh"
+    user: root
+    entrypoint: ["check-kafka-topics-created.sh"]
+    depends_on:
+      - twitter-to-kafka-service
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
+      - elastic-1
+      - elastic-2
+      - elastic-3
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=error"
+      - "LOGGING_LEVEL_ROOT=error"
+      - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+  elastic-query-service-1:
+    image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5008:5008"
+      - "8183:8183"
+    volumes:
+      - "./docker-logs:/workspace/elastic-query-service/logs"
+    depends_on:
+      - elastic-1
+      - elastic-2
+      - elastic-3
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5008 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "SERVER_PORT=8183"
+      - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+  elastic-query-service-2:
+    image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5009:5009"
+      - "8185:8185"
+    volumes:
+      - "./docker-logs:/workspace/elastic-query-service/logs"
+    depends_on:
+      - elastic-1
+      - elastic-2
+      - elastic-3
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5009 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "SERVER_PORT=8185"
+      - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+  elastic-query-web-client:
+    image: ${GROUP_ID}/elastic.query.web.client:${SERVICE_VERSION:-latest}
+    ports:
+      - "5010:5010"
+      - "8184:8184"
+    volumes:
+      - "./docker-logs:/workspace/elastic-query-web-client/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5010 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "SERVER_PORT=8184"
+      - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-web-client"
+      - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_BASE-URL=http://elastic-query-service/elastic-query-service/documents"
+      - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_0_ID=elastic-query-service-1"
+      - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_0_HOST=elastic-query-service-1"
+      - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_0_PORT=8183"
+      - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_1_ID=elastic-query-service-2"
+      - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_1_HOST=elastic-query-service-2"
+      - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_1_PORT=8185"
     networks:
       - ${GLOBAL_NETWORK:-services}

@@ -57,5 +57,6 @@ mvnw.cmd
 mvnw
 **/src/main/resources/static/
 **/src/main/resources/twitter4j.properties
+# docker-compose/docker-logs/
 
 ### Test ##
