@@ -22,6 +22,10 @@
         </dependency>
         <dependency>
             <groupId>com.microservices.demo</groupId>
+            <artifactId>app-config-data</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.microservices.demo</groupId>
             <artifactId>elastic-index-client</artifactId>
         </dependency>
         <dependency>

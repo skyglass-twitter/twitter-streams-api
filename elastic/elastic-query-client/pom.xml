@@ -22,11 +22,11 @@
         </dependency>
         <dependency>
             <groupId>com.microservices.demo</groupId>
-            <artifactId>elastic-config</artifactId>
+            <artifactId>elastic-model</artifactId>
         </dependency>
         <dependency>
             <groupId>com.microservices.demo</groupId>
-            <artifactId>elastic-model</artifactId>
+            <artifactId>elastic-config</artifactId>
         </dependency>
     </dependencies>
 

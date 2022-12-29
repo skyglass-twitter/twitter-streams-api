@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@Document(indexName = "#{elasticConfigData.indexName}")
+//TODO @Document(indexName = "#{elasticConfigData.indexName}")
+//fix the property reference for elasticConfigData.indexName: EL1007E: Property or field 'elasticConfigData' cannot be found on null
+@Document(indexName = "twitter-index")
 public class TwitterIndexModel implements IndexModel {
 
     @JsonProperty
