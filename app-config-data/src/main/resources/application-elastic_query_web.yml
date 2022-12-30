@@ -11,7 +11,7 @@ elastic-query-web-client:
     max-in-memory-size: 10485760 # 10MB
     content-type: 'application/vnd.api.v1+json'
     accept-type: 'application/vnd.api.v1+json'
-    base-url: 'http://elastic-query-service/elastic-query-service/documents'
+    base-url: 'http://elastic-query-service:8183/elastic-query-service/documents'
     service-id: elastic-query-service
     instances:
       -
