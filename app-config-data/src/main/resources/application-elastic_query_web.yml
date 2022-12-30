@@ -15,13 +15,9 @@ elastic-query-web-client:
     service-id: elastic-query-service
     instances:
       -
-        id: elastic-query-service-1
+        id: elastic-query-service
         host: localhost
         port: 8183
-      -
-        id: elastic-query-service-2
-        host: localhost
-        port: 8185
   query-by-text:
     method: POST
     uri: "/get-document-by-text"
