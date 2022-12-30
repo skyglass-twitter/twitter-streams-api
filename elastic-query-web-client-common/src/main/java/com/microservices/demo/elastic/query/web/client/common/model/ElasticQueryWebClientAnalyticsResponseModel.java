@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ElasticQueryWebClientResponseModel {
-    private String id;
-    private Long userId;
-    private String text;
-    private ZonedDateTime createdAt;
+public class ElasticQueryWebClientAnalyticsResponseModel {
+    private List<ElasticQueryWebClientResponseModel> queryResponseModels;
+    private Long wordCount;
+    private String fallbackMessage;
 }

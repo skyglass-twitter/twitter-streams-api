@@ -11,12 +11,11 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
-//TODO @Document(indexName = "#{elasticConfigData.indexName}")
-//fix the property reference for elasticConfigData.indexName: EL1007E: Property or field 'elasticConfigData' cannot be found on null
-@Document(indexName = "twitter-index")
+@Document(indexName = "#{@elasticConfigData.indexName}")
 public class TwitterIndexModel implements IndexModel {
 
     @JsonProperty
@@ -26,8 +25,8 @@ public class TwitterIndexModel implements IndexModel {
     @JsonProperty
     private String text;
 
-    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "uuuu-MM-dd'T'HH:mm:ssZZ")
+    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ssZZ")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "uuuu-MM-dd'T'HH:mm:ssZZ")
     @JsonProperty
-    private LocalDateTime createdAt;
+    private ZonedDateTime createdAt;
 }

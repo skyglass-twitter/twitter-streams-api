@@ -51,7 +51,7 @@ public class QueryController {
                 new ReactiveDataDriverContextVariable(responseModel, 1);
         model.addAttribute("elasticQueryClientResponseModels", reactiveData);
         model.addAttribute("searchText", requestModel.getText());
-        model.addAttribute("elasticQueryClientRequestModel",
+        model.addAttribute("elasticQueryClientResponseModel",
                 ElasticQueryWebClientRequestModel.builder().build());
         LOG.info("Returning from reactive client controller for text {} !", requestModel.getText());
         return "home";

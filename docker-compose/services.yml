@@ -31,7 +31,7 @@ services:
       - elastic-2
       - elastic-3
     environment:
-      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx256m"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms512m -Xmx1024m"
       - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=error"
       - "LOGGING_LEVEL_ROOT=error"
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
