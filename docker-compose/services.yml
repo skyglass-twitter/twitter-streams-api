@@ -6,6 +6,10 @@ services:
       - "5005:5005"
     volumes:
       - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
+    depends_on:
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
@@ -31,9 +35,9 @@ services:
       - elastic-2
       - elastic-3
     environment:
-      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms512m -Xmx1024m"
-      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=error"
-      - "LOGGING_LEVEL_ROOT=error"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms256m -Xmx512m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
+      - "LOGGING_LEVEL_ROOT=info"
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"

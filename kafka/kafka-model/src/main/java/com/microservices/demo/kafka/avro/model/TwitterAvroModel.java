@@ -15,16 +15,18 @@ import org.apache.avro.message.SchemaStore;
 @org.apache.avro.specific.AvroGenerated
 public class TwitterAvroModel extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   private static final long serialVersionUID = -5190598237215532904L;
+
+
   public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TwitterAvroModel\",\"namespace\":\"com.microservices.demo.kafka.avro.model\",\"fields\":[{\"name\":\"userId\",\"type\":\"long\"},{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"text\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}]},{\"name\":\"createdAt\",\"type\":[\"null\",\"long\"],\"logicalType\":[\"null\",\"date\"]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
-  private static SpecificData MODEL$ = new SpecificData();
+  private static final SpecificData MODEL$ = new SpecificData();
 
   private static final BinaryMessageEncoder<TwitterAvroModel> ENCODER =
-      new BinaryMessageEncoder<TwitterAvroModel>(MODEL$, SCHEMA$);
+      new BinaryMessageEncoder<>(MODEL$, SCHEMA$);
 
   private static final BinaryMessageDecoder<TwitterAvroModel> DECODER =
-      new BinaryMessageDecoder<TwitterAvroModel>(MODEL$, SCHEMA$);
+      new BinaryMessageDecoder<>(MODEL$, SCHEMA$);
 
   /**
    * Return the BinaryMessageEncoder instance used by this class.
@@ -48,7 +50,7 @@ public class TwitterAvroModel extends org.apache.avro.specific.SpecificRecordBas
    * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
    */
   public static BinaryMessageDecoder<TwitterAvroModel> createDecoder(SchemaStore resolver) {
-    return new BinaryMessageDecoder<TwitterAvroModel>(MODEL$, SCHEMA$, resolver);
+    return new BinaryMessageDecoder<>(MODEL$, SCHEMA$, resolver);
   }
 
   /**
@@ -71,10 +73,10 @@ public class TwitterAvroModel extends org.apache.avro.specific.SpecificRecordBas
     return DECODER.decode(b);
   }
 
-   private long userId;
-   private long id;
-   private java.lang.String text;
-   private java.lang.Long createdAt;
+  private long userId;
+  private long id;
+  private java.lang.String text;
+  private java.lang.Long createdAt;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -97,9 +99,14 @@ public class TwitterAvroModel extends org.apache.avro.specific.SpecificRecordBas
     this.createdAt = createdAt;
   }
 
+  @Override
   public org.apache.avro.specific.SpecificData getSpecificData() { return MODEL$; }
+
+  @Override
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
+
   // Used by DatumWriter.  Applications should not call.
+  @Override
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return userId;
@@ -111,6 +118,7 @@ public class TwitterAvroModel extends org.apache.avro.specific.SpecificRecordBas
   }
 
   // Used by DatumReader.  Applications should not call.
+  @Override
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
@@ -238,7 +246,7 @@ public class TwitterAvroModel extends org.apache.avro.specific.SpecificRecordBas
 
     /** Creates a new Builder */
     private Builder() {
-      super(SCHEMA$);
+      super(SCHEMA$, MODEL$);
     }
 
     /**
@@ -270,7 +278,7 @@ public class TwitterAvroModel extends org.apache.avro.specific.SpecificRecordBas
      * @param other The existing instance to copy.
      */
     private Builder(com.microservices.demo.kafka.avro.model.TwitterAvroModel other) {
-      super(SCHEMA$);
+      super(SCHEMA$, MODEL$);
       if (isValidValue(fields()[0], other.userId)) {
         this.userId = data().deepCopy(fields()[0].schema(), other.userId);
         fieldSetFlags()[0] = true;

@@ -41,7 +41,7 @@
 		<avro.version>1.11.1</avro.version>
 		<spring-kafka.version>2.9.2</spring-kafka.version>
 		<spring-retry.version>1.3.0</spring-retry.version>
-		<kafka-avro-serializer.version>7.2.1</kafka-avro-serializer.version>
+		<kafka-avro-serializer.version>7.3.0</kafka-avro-serializer.version>
 		<elastic.version>7.17.4</elastic.version>
 		<springdoc-openapi-ui.version>1.6.12</springdoc-openapi-ui.version>
 	</properties>

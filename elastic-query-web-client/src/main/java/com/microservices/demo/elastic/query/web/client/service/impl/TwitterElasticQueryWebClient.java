@@ -2,13 +2,11 @@ package com.microservices.demo.elastic.query.web.client.service.impl;
 
 import com.microservices.demo.config.ElasticQueryWebClientConfigData;
 import com.microservices.demo.elastic.query.web.client.common.exception.ElasticQueryWebClientException;
-import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientAnalyticsResponseModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientRequestModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientResponseModel;
 import com.microservices.demo.elastic.query.web.client.service.ElasticQueryWebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -21,9 +19,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-
-import static com.microservices.demo.mdc.Constants.CORRELATION_ID_HEADER;
-import static com.microservices.demo.mdc.Constants.CORRELATION_ID_KEY;
 
 @Service
 public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
@@ -41,11 +36,11 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
     }
 
     @Override
-    public ElasticQueryWebClientAnalyticsResponseModel getDataByText(ElasticQueryWebClientRequestModel requestModel) {
+    public List<ElasticQueryWebClientResponseModel> getDataByText(ElasticQueryWebClientRequestModel requestModel) {
         LOG.info("Querying by text {}", requestModel.getText());
         return getWebClient(requestModel)
-                .bodyToMono(ElasticQueryWebClientAnalyticsResponseModel.class)
-                .log()//Logger
+                .bodyToFlux(ElasticQueryWebClientResponseModel.class)
+                .collectList()
                 .block();
     }
 
@@ -55,7 +50,6 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
                 .method(HttpMethod.valueOf(elasticQueryWebClientConfigData.getQueryByText().getMethod()))
                 .uri(elasticQueryWebClientConfigData.getQueryByText().getUri())
                 .accept(MediaType.valueOf(elasticQueryWebClientConfigData.getQueryByText().getAccept()))
-                .header(CORRELATION_ID_HEADER, MDC.get(CORRELATION_ID_KEY))
                 .body(BodyInserters.fromPublisher(Mono.just(requestModel), createParameterizedTypeReference()))
                 .retrieve()
                 .onStatus(
@@ -63,11 +57,10 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
                         clientResponse -> Mono.just(new BadCredentialsException("Not authenticated!")))
                 .onStatus(
                         HttpStatus::is4xxClientError,
-                        clientResponse -> Mono.just(
-                                new ElasticQueryWebClientException(clientResponse.statusCode().getReasonPhrase())))
+                        cr -> Mono.just(new ElasticQueryWebClientException(cr.statusCode().getReasonPhrase())))
                 .onStatus(
                         HttpStatus::is5xxServerError,
-                        clientResponse -> Mono.just(new Exception(clientResponse.statusCode().getReasonPhrase())));
+                        cr -> Mono.just(new Exception(cr.statusCode().getReasonPhrase())));
     }
 
 
