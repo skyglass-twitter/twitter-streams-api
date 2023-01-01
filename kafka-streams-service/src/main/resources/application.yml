@@ -1,0 +1,1 @@
+spring.profiles.include: 'common,kafka_streams'
