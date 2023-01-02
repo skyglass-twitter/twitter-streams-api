@@ -88,8 +88,8 @@ services:
       - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak-server:9091/auth/realms/microservices-realm/protocol/openid-connect/certs"
       - "SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN-URI=http://keycloak-server:9091/auth/realms/microservices-realm/protocol/openid-connect/token"
       - "SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/twitter?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true"
-      - "ELASTIC-QUERY-SERVICE_QUERY-FROM-KAFKA-STATE-STORE_URI=http://kafka-streams-service:9001/get-word-count-by-word/{word}"
-      - "ELASTIC-QUERY-SERVICE_QUERY-FROM-ANALYTICS-DATABASE_URI=http://analytics-service:9002/get-word-count-by-word/{word}"
+      - "ELASTIC-QUERY-SERVICE_QUERY-FROM-KAFKA-STATE-STORE_URI=http://kafka-streams-service:8187/get-word-count-by-word/{word}"
+      - "ELASTIC-QUERY-SERVICE_QUERY-FROM-ANALYTICS-DATABASE_URI=http://analytics-service:8188/get-word-count-by-word/{word}"
       - "ELASTIC-QUERY-SERVICE_WEBCLIENT_QUERY-TYPE=ANALYTICS_DATABASE"
     networks:
       - ${GLOBAL_NETWORK:-services}
