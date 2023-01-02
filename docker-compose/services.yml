@@ -90,7 +90,7 @@ services:
       - "SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/twitter?currentSchema=public&binaryTransfer=true&reWriteBatchedInserts=true"
       - "ELASTIC-QUERY-SERVICE_QUERY-FROM-KAFKA-STATE-STORE_URI=http://kafka-streams-service:8187/get-word-count-by-word/{word}"
       - "ELASTIC-QUERY-SERVICE_QUERY-FROM-ANALYTICS-DATABASE_URI=http://analytics-service:8188/get-word-count-by-word/{word}"
-      - "ELASTIC-QUERY-SERVICE_WEBCLIENT_QUERY-TYPE=ANALYTICS_DATABASE"
+      - "ELASTIC-QUERY-SERVICE_WEBCLIENT_QUERY-TYPE=KAFKA_STATE_STORE"
     networks:
       - ${GLOBAL_NETWORK:-services}
   elastic-query-web-client:
@@ -132,30 +132,6 @@ services:
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "LOG_APP-NAME=kafka-streams-service"
-      - "SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
-    networks:
-      - ${GLOBAL_NETWORK:-services}
-  analytics-service:
-    image: ${GROUP_ID}/analytics.service:${SERVICE_VERSION:-latest}
-    ports:
-      - "5013:5013"
-      - "8188:8188"
-    volumes:
-      - "./docker-logs:/workspace/analytics-service/logs"
-    depends_on:
-      - keycloak-server
-    environment:
-      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5013 -Xms128m -Xmx256m"
-      - "LOGGING_LEVEL_COM_MICROSERVICES_DEMO=info"
-      - "LOGGING_LEVEL_ROOT=info"
-      - "SERVER_PORT=8188"
-      - "SERVER_SERVLET_CONTEXT-PATH=/"
-      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-server:9091/auth/realms/microservices-realm"
-      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak-server:9091/auth/realms/microservices-realm/protocol/openid-connect/certs"
-      - "SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/analytics?currentSchema=analytics&binaryTransfer=true&reWriteBatchedInserts=true"
-      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
-      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
-      - "LOG_APP-NAME=analytics-service"
       - "SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
     networks:
       - ${GLOBAL_NETWORK:-services}

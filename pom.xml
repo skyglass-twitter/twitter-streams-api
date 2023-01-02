@@ -17,10 +17,10 @@
 		<module>elastic-query-web-client</module>
 		<module>elastic-query-service-common</module>
 		<module>elastic-query-web-client-common</module>
-		<module>reactive-elastic-query-service</module>
-		<module>reactive-elastic-query-web-client</module>
+		<!--<module>reactive-elastic-query-service</module>
+		<module>reactive-elastic-query-web-client</module> -->
 		<module>kafka-streams-service</module>
-		<module>analytics-service</module>		
+		<!-- <module>analytics-service</module> -->
 		<module>mdc-interceptor</module>
 	</modules>
 	<parent>
